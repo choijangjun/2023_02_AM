@@ -18,7 +18,7 @@ public class Main {
 			
 			
 			System.out.printf("명령어 ) ");
-			String command = sc.nextLine();
+			String command = sc.nextLine().trim();
 			
 //			System.out.printf("입력된 명령어 : %s\n",  command);
 
@@ -32,14 +32,13 @@ public class Main {
 			}
 
 			if (command.equals("article list")) {
-				if (lastArticleId == 0) {
+				if (articles.size() == 0) {
 					System.out.println("게시글이 없습니다.");
-					continue;
 				}else {
-					
-					System.out.println("번호 / 제목");
-					for(int i = lastArticleId; i >= 1; i--) {
-						System.out.printf(" %d / \n", i);
+					System.out.println("번호 / 제목 / 내용");
+					for(int i = articles.size()-1; i >= 0; i--) {
+						Article article = articles.get(i);
+						System.out.printf("  %d  /  %s  /  %s  \n", article.id, article.title, article.body);
 						
 					}
 					
@@ -54,6 +53,7 @@ public class Main {
 //				System.out.printf("%s / %s\n", title, body);
 
 				Article article = new Article(id, title, body);
+				articles.add(article);
 				
 				System.out.printf("%d번 글이 생성되었습니다.\n", id);
 				lastArticleId++;
@@ -71,6 +71,9 @@ public class Main {
 		System.out.println("==프로그램 끝==");
 
 		sc.close();
+		
+		
+	
 	}
 
 }
