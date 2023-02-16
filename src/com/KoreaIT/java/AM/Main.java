@@ -1,5 +1,6 @@
 package com.KoreaIT.java.AM;
 
+import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,14 +27,37 @@ public class Main {
 				System.out.println("명령어를 입력해주세요.");
 				continue;
 			}
-
+			
+			
+				
+				
+			if (command.equals("article delete 1")) {
+				if (articles.size() == 0) {
+					System.out.println("게시물은 존재하지 않습니다.");
+					continue;
+					
+				}else if(articles.size() == 1){
+					
+					Article article = articles.remove(0);
+					
+					System.out.printf("%d번 게시물이 삭제 되었습니다.",article.id);
+					continue;
+					
+				
+					
+					
+				}
+				
+				
+			}
+			
 			if (command.equals("system exit")) {
 				break;
 			}
 
 			if (command.equals("article list")) {
 				if (articles.size() == 0) {
-					System.out.println("게시글이 없습니다.");
+					System.out.println("게시물은 존재하지 않습니다.");
 				}else {
 					System.out.println("번호 / 제목 / 내용");
 					for(int i = articles.size()-1; i >= 0; i--) {
@@ -60,11 +84,46 @@ public class Main {
 				
 				
 				
-			} else {
+			}else if (command.startsWith("article detail ")) {
+				
+				String[] cmdBits = command.split(" "); // article / detail / 1
+				// cmdBits[0] => article
+				// cmdBits[1] => detail
+				// cmdBits[2] => id
+				
+				int id = Integer.parseInt(cmdBits[2]);
+				
+				// article detail 1 => "1" => 1
+				
+				boolean found = false;
+				Article article = null;
+				for (int i = 0; i < articles.size(); i++) {
+					// 0, 1, 2 -> index
+					// 1, 2, 3 -> id
+					article = articles.get(i);
+					if (article.id == id) {
+						found = true;
+						break;
+					}
+				}
+				
+				if (found == false) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				}
+				System.out.printf("번호 : %d\n", id);
+				System.out.printf("날짜 : %s\n", "2023-12-12 12:12:12");
+				System.out.printf("제목 : %s\n", article.title);
+				System.out.printf("내용 : %s\n", article.body);
+				
+			}
+			else {
 
 				System.out.println("존재하지 않는 명령어 입니다.");
 
 			}
+			
+			
 
 		}
 
@@ -79,8 +138,8 @@ public class Main {
 }
 
 class Article {
-	String title;
 	int id;
+	String title;
 	String body;
 	Article(int id, String title, String body) {
 		this.id = id;
@@ -88,6 +147,7 @@ class Article {
 		this.body = body;
 	}
 	
+
 	
 	
 	
