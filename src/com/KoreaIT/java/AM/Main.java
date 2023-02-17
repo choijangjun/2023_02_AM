@@ -8,17 +8,28 @@ import java.util.Scanner;
 
 public class Main {
 
+	public static List<Article> articles;
+
+	static {
+		articles = new ArrayList<>();
+	}
+	static int lastArticleId = 0;
+	static int id = lastArticleId+1;
+	
+	
+
 	public static void main(String[] args) {
 		
 		
 		
 		
 		System.out.println("==프로그램 시작==");
+		
 
 		Scanner sc = new Scanner(System.in);
 		
-		int lastArticleId = 0;
-		List<Article> articles = new ArrayList<>();
+		
+		makeTestData();
 		
 		while (true) {
 			
@@ -205,6 +216,40 @@ public class Main {
 	
 	}
 
+	
+	static void makeTestData() {
+		System.out.println("테스트를 위한 데이터를 생성합니다.");
+		
+		lastArticleId = 0;
+		id = lastArticleId + 1;
+		String now = Util.getDate();
+		String title = "Exam01";
+		String body = "Exam01";
+		int look = 0;
+		for (int i = 1; i <= 3; i++) {
+			id = lastArticleId + 1;
+			title = title + i;
+			body = body + i;
+			Article article = new Article(id, now, title, body, look);
+			articles.add(article);
+			System.out.printf("%d번 글이 생성되었습니다.\n", id);
+			lastArticleId++;
+			
+		}
+		
+		
+	}
+
+
+	
+		
+	
+
+	 
+		
+		
+	
+
 }
 
 class Article {
@@ -222,8 +267,11 @@ class Article {
 		this.look = look;
 	}
 	
+	
+	
 
 	
-	
-	
 }
+
+
+
