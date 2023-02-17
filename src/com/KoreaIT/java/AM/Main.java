@@ -40,25 +40,7 @@ public class Main {
 			
 				
 				
-			if (command.equals("article delete 1")) {
-				if (articles.size() == 0) {
-					System.out.println("게시물은 존재하지 않습니다.");
-					continue;
-					
-				}else if(articles.size() == 1){
-					
-					Article article = articles.remove(0);
-					
-					System.out.printf("%d번 게시물이 삭제 되었습니다.",article.id);
-					continue;
-					
-				
-					
-					
-				}
-				
-				
-			}
+			
 			
 			if (command.equals("system exit")) {
 				break;
@@ -68,10 +50,10 @@ public class Main {
 				if (articles.size() == 0) {
 					System.out.println("게시물은 존재하지 않습니다.");
 				}else {
-					System.out.println("번호 / 제목 / 내용");
+					System.out.println("번호 / 제목 / 날짜 / 조회수");
 					for(int i = articles.size()-1; i >= 0; i--) {
 						Article article = articles.get(i);
-						System.out.printf("  %d  /  %s  /  %s  \n", article.id, article.title, article.body);
+						System.out.printf("  %d  /  %s  /  %s  / %d\n", article.id, article.title, article.now,article.look);
 						
 					}
 					
@@ -84,18 +66,11 @@ public class Main {
 				System.out.printf("내용 : ");
 				String body = sc.nextLine();
 				
-				LocalDateTime Today = LocalDateTime.now();
-				int year = Today.getYear();  // 연도
-				int monthValue = Today.getMonthValue();
-				int dayOfMonth = Today.getDayOfMonth();  // 일(월 기준)
-				int hour = Today.getHour();
-		        int minute = Today.getMinute();
-		        int second = Today.getSecond();
-				String now = ""+year +"-"+ monthValue +"-"+dayOfMonth +" "+hour+":"+minute+":"+second;
-				
+				String now = Util.getDate();
+				int look = 0;
 //				System.out.printf("%s / %s\n", title, body);
 
-				Article article = new Article(id, title, body, now);
+				Article article = new Article(id, now, title, body, look);
 				articles.add(article);
 				
 				System.out.printf("%d번 글이 생성되었습니다.\n", id);
@@ -122,6 +97,7 @@ public class Main {
 					// 1, 2, 3 -> id
 					Article article = articles.get(i);
 					if (article.id == id) {
+						article.look++;
 						
 						foundArticle = article;
 						break;
@@ -136,9 +112,82 @@ public class Main {
 				System.out.printf("날짜 : %s\n", foundArticle.now);
 				System.out.printf("제목 : %s\n", foundArticle.title);
 				System.out.printf("내용 : %s\n", foundArticle.body);
+				System.out.printf("조회수 : %d\n", foundArticle.look);
 				
-			}
-			else {
+			}else if (command.startsWith("article delete ")) {
+				String[] cmdBits = command.split(" "); // article / detail / 1
+				// cmdBits[0] => article
+				// cmdBits[1] => detail
+				// cmdBits[2] => id
+				
+				int id = Integer.parseInt(cmdBits[2]);
+				
+				// article detail 1 => "1" => 1
+				
+				
+				
+				int foundIndex = -1;
+				
+				for (int i = 0; i < articles.size(); i++) {
+					// 0, 1, 2 -> index
+					// 1, 2, 3 -> id
+					Article article = articles.get(i);
+					if (article.id == id) {
+						foundIndex = i;
+						
+						break;
+					}
+				}
+				
+				if (foundIndex == -1) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				}
+				articles.remove(foundIndex);
+				System.out.printf("%d번 글을 삭제했습니다.\n", id);
+				
+			}else if (command.startsWith("article modify ")) {
+				String[] cmdBits = command.split(" "); // article / detail / 1
+				// cmdBits[0] => article
+				// cmdBits[1] => detail
+				// cmdBits[2] => id
+				
+				int id = Integer.parseInt(cmdBits[2]);
+				
+				// article detail 1 => "1" => 1
+				
+				
+				
+				int foundIndex = -1;
+				
+				for (int i = 0; i < articles.size(); i++) {
+					// 0, 1, 2 -> index
+					// 1, 2, 3 -> id
+					Article article = articles.get(i);
+					if (article.id == id) {
+						foundIndex = i;
+						System.out.printf("제목 : ");
+						article.title = sc.nextLine();
+						System.out.printf("내용 : ");
+						article.body = sc.nextLine();
+						String now = Util.getDate();
+						article.now = now;
+						
+						
+						System.out.printf("%d번 글을 수정했습니다.\n", id);
+						
+						break;
+					}
+				}
+				
+				if (foundIndex == -1) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				}
+				
+				
+				
+			}else {
 
 				System.out.println("존재하지 않는 명령어 입니다.");
 
@@ -163,12 +212,14 @@ class Article {
 	String now;
 	String title;
 	String body;
+	int look;
 	
-	Article(int id, String now, String title, String body) {
+	Article(int id, String now,  String title, String body, int look) {
 		this.id = id;
 		this.now = now;
 		this.title = title;
 		this.body = body;
+		this.look = look;
 	}
 	
 
